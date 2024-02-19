@@ -17,6 +17,13 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+
+Route::get('/videos/1', function () {
+    //return 'videos.show | Video 1 description | December 13';
+    return view('videos.show'); // CRUD -> RETRIEVE -> només un vídeo
+});
+
+
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
