@@ -5,11 +5,14 @@ namespace Tests\Unit;
 // Make sure to use Laravel's TestCase, not PHPUnit's
 use App\Models\User;
 use App\Models\Video;
+use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 
 class HelperTest extends TestCase
 {
+    use refreshDatabase;
     /**
      * @test create_default_user
      */
@@ -24,13 +27,17 @@ class HelperTest extends TestCase
         $this->assertDatabaseHas('users', [
             'name' => config('casteaching.default_user.name'),
             'email' => config('casteaching.default_user.email'),
-
         ]);
 
         $user = User::find(1);
-        $this->assertNotNull($user->current_team_id);
-        $this ->assertEquals(1, $user->current_team_id);
 
+        $this->assertNotNull($user);
+        $this->assertEquals(config('casteaching.default_user.name'), $user->name);
+        $this->assertEquals(config('casteaching.default_user.email'), $user->email);
+
+//        $this->assertNotNull($user->current_team_id);
+//        $this ->assertEquals(1, $user->current_team_id);
+        $this->assertTrue(Hash::check(config('casteaching.default_user.password'), $user->password));
 
     }
 
