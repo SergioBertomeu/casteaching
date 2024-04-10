@@ -8,12 +8,17 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
+/**
+ * Class VideoTest
+ * @covers  \App\Http\Controllers\VideosController
+ */
 class VideoTest extends TestCase
 {
     use RefreshDatabase;        //ESTAT PRECONEGUT -> ZERO STATE
 
     /**
      * @test
+     * @covers \App\Http\Controllers\VideosController::show
      */
     public function users_can_view_videos()
     {
@@ -47,4 +52,16 @@ class VideoTest extends TestCase
 
         }
 
+    /**
+     * @test
+     */
+    public function users_cannot_view_not_existing_videos()
+    {
+
+
+        $response = $this->get('/videos/999'); // 'videos/1' -> 'videos/{video}' -> 'videos/1'
+
+        $response->assertStatus(404);
+        $response->assertSee('Not Found');
+    }
 }

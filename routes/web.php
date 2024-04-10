@@ -22,19 +22,6 @@ Route::get('/', function () {
 
 Route::get('/videos/{id}', [ VideosController::class, 'show']);
 
-//Route::get('/videos/1', function () {
-//    //return 'videos.show | Video 1 description | December 13';
-//    $video = Video::find(1);
-////    $video = new stdclass();
-////    $video->title = 'Ubuntu 101';
-////    $video->description = 'Here description';
-////    $video->url = 'https://www.youtube.com/watch?app=desktop&v=w8j07_DBl_I&ab_channel=acacha-dev';
-////    $video->published_at = 'December 13, 2020 8:00pm';
-//    return view('videos.show', [
-//        'video' => $video
-//
-//    ]); // CRUD -> RETRIEVE -> només un vídeo
-//});
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
