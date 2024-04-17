@@ -8,6 +8,7 @@ use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Foundation\Testing\WithFaker;
 use Tests\TestCase;
 
+
 /**
  * Class VideoTest
  * @covers  \App\Http\Controllers\VideosController
@@ -18,13 +19,10 @@ class VideoTest extends TestCase
 
     /**
      * @test
-     * @covers \App\Http\Controllers\VideosController::show
      */
     public function users_can_view_videos()
     {
-        // FASE 1 -> Preparació -> Preparar
-        // WISHFUL PROGRAMMING -> API
-        // Laravel eloquent -> https://laravel.com/docs/8.x/eloquent
+
          $video = Video::create([
             'title' => 'Ubuntu 101',
             'description' => '# Here description',
@@ -35,20 +33,12 @@ class VideoTest extends TestCase
             'series_id' => 1
         ]);
 
-
-        // FASE 2 -> Execució -> Executar el codi a provar
-        // Laravel HTTP TESTS -> https://laravel.com/docs/8.x/http-tests
-        //dd('/videos/' . $video->id); // 'videos/1' -> 'videos/{video}' -> 'videos/1'
         $response = $this->get('/videos/' . $video->id); // 'videos/1' -> 'videos/{video}' -> 'videos/1'
-
-
-
-        // FASE 3 -> Assertions -> Comprovacions
 
         $response->assertStatus(200);
         $response->assertSee('Ubuntu 101');
         $response->assertSee('Here description');
-        $response->assertSee('December 13');
+        $response->assertSee('13 de desembre de 2020');
 
         }
 
