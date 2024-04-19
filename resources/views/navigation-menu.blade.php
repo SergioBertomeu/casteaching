@@ -17,9 +17,10 @@
                     </x-nav-link>
                     <x-nav-link href="/videos/1">
                         {{ __('Videos 1') }}
-                        @can('videos_manage_index')
-                    </x-nav-link> <x-nav-link href="manage/videos">
-                        {{ __('Manage Videos') }}
+                    </x-nav-link>
+                    @can('videos_manage_index')
+                    <x-nav-link href="/manage/videos" :active="request()->routeIs('manage.videos')">
+                        {{ __('Videos') }}
                     </x-nav-link>
                     @endcan
                 </div>

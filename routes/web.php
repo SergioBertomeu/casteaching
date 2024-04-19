@@ -23,16 +23,6 @@ Route::get('/', function () {
 
 Route::get('/videos/{id}', [ VideosController::class, 'show']);
 
-//Route::middleware([
-//    'auth:sanctum',
-//    config('jetstream.auth_session'),
-//    'verified',
-//])->group(function () {
-//    Route::get('/dashboard', function () {
-//        return view('dashboard');
-//    })->name('dashboard');
-//});
-
 
 
 Route:: middleware(['auth:sanctum', 'verified'])->group(function () {
@@ -44,3 +34,14 @@ Route:: middleware(['auth:sanctum', 'verified'])->group(function () {
         ->middleware('can:videos_manage_index')
         ->name('manage.videos');
 });
+
+
+//Route::middleware([
+//    'auth:sanctum',
+//    config('jetstream.auth_session'),
+//    'verified',
+//])->group(function () {
+//    Route::get('/dashboard', function () {
+//        return view('dashboard');
+//    })->name('dashboard');
+//});

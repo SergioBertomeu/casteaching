@@ -85,7 +85,6 @@ if (!function_exists('create_video_manager_user')) {
         Permission::create(['name' => 'videos_manage_index']);
         $user->givePermissionTo('videos_manage_index');
         add_personal_team($user);
-        dd(Team::all());
         return $user;
     }
 }
@@ -147,12 +146,40 @@ if (!function_exists('define_gates')) {
 if (!function_exists('create_permission')) {
     function create_permission()
     {
-        Permission::create(['name' => 'videos_manage_index']);
+        Permission::firstOrCreate(['name' => 'videos_manage_index']);
 
 
     }
 
 }
+
+if (!function_exists('create_sample_videos')) {
+    function create_sample_videos(){
+        $video1 = Video::create([
+            'title' => 'Ubuntu 101',
+            'description' => '# Here description',
+            'url' => 'https://www.youtube.com/watch?app=desktop&v=w8j07_DBl_I&ab_channel=acacha-dev',
+        ]);
+        $video2 = Video::create([
+            'title' => 'Ubuntu 102',
+            'description' => '# Here description',
+            'url' => 'https://www.youtube.com/watch?app=desktop&v=w8j07_DBl_I&ab_channel=acacha-dev',
+        ]);
+        $video3 = Video::create([
+            'title' => 'Ubuntu 103',
+            'description' => '# Here description',
+            'url' => 'https://www.youtube.com/watch?app=desktop&v=w8j07_DBl_I&ab_channel=acacha-dev',
+        ]);
+
+        return collect([$video1, $video2, $video3]);
+    }
+}
+
+
+
+
+
+
 
 
 
