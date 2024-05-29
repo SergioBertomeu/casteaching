@@ -1,58 +1,221 @@
 <x-casteaching-layout>
-    <div class="flex flex-col  items-center">
+{{--    https://tailwindui.com/components/application-ui/page-examples/home-screens--}}
+    <div id="layout_series_navigation" class="min-h-full" x-data="{ open: false }">
+        <!-- Off-canvas menu for mobile, show/hide based on off-canvas menu state. -->
+        <div x-show="open" class="fixed inset-0 flex z-40 lg:hidden" role="dialog" aria-modal="true">
+            <!--
+              Off-canvas menu overlay, show/hide based on off-canvas menu state.
 
-        <div class="h-screen">
+              Entering: "transition-opacity ease-linear duration-300"
+                From: "opacity-0"
+                To: "opacity-100"
+              Leaving: "transition-opacity ease-linear duration-300"
+                From: "opacity-100"
+                To: "opacity-0"
+            -->
+            <div class="fixed inset-0 bg-gray-600 bg-opacity-75" aria-hidden="true"></div>
 
-            <iframe
-                class="md:p-3 lg:p-5 xl:px-10 xl:py-5 2xl:px-20 2xl:py-10 h-4/5 w-full
-                md:px-6  xl:px-15"
-                style="height: 75vh;"
-                src="https://www.youtube.com/embed/btGr3mPK1dU?si=I3vd2BDpNl3bvpmo"
-                title="YouTube video player" frameborder="0"
-                allow="accelerometer; autoplay; clipboard-write;
-                encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerpolicy="strict-origin-when-cross-origin"
-                allowfullscreen>
-            </iframe>
+            <!--
+              Off-canvas menu, show/hide based on off-canvas menu state.
 
+              Entering: "transition ease-in-out duration-300 transform"
+                From: "-translate-x-full"
+                To: "translate-x-0"
+              Leaving: "transition ease-in-out duration-300 transform"
+                From: "translate-x-0"
+                To: "-translate-x-full"
+            -->
+            <div class="relative flex-1 flex flex-col max-w-xs w-full pt-5 pb-4 bg-white">
+                <!--
+                  Close button, show/hide based on off-canvas menu state.
+
+                  Entering: "ease-in-out duration-300"
+                    From: "opacity-0"
+                    To: "opacity-100"
+                  Leaving: "ease-in-out duration-300"
+                    From: "opacity-100"
+                    To: "opacity-0"
+                -->
+                <div class="absolute top-0 right-0 -mr-12 pt-2">
+                    <button type="button"
+                            class="ml-1 flex items-center justify-center h-10 w-10 rounded-full focus:outline-none focus:ring-2 focus:ring-inset focus:ring-white"
+                            x-on:click="open = false;"
+                    >
+                        <span class="sr-only">Close sidebar</span>
+                        <!-- Heroicon name: outline/x -->
+                        <svg class="h-6 w-6 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="flex-shrink-0 flex items-center px-4">
+                    <img class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0 mr-2" src="/storage/{{ $video->serie?->image_url }}" alt="">
+                    <span class="w-80 truncate">{{ $video->serie?->title }}</span>
+                </div>
+                <div class="mt-5 flex-1 h-0 overflow-y-auto">
+                    <nav class="px-2">
+                        <div class="space-y-1">
+                            @foreach ($videos_series as $sVideo)
+                                @if ($sVideo->is($video))
+                                         <!-- Current: "bg-gray-100 text-gray-900", Default: "text-gray-600 hover:text-gray-900 hover:bg-gray-50" -->
+                                        <a href="/videos/{{ $sVideo->id }}" class="w-80 bg-gray-100 text-gray-900 group flex items-center px-2 py-2 text-base leading-5 font-medium rounded-md" aria-current="page">
+                                            <!--
+                                              Heroicon name: outline/home
+
+                                              Current: "text-gray-500", Default: "text-gray-400 group-hover:text-gray-500"
+                                            -->
+                                            <svg class="text-gray-500 mr-3 flex-shrink-0 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                            </svg>
+                                            <span class="w-64 truncate" title="{{ $sVideo->title }}">{{ $sVideo->title }}</span>
+                                        </a>
+                                    @else
+                                        <a href="/videos/{{ $sVideo->id }}" class="w-80 text-gray-600 hover:text-gray-900 hover:bg-gray-50 group flex items-center px-2 py-2 text-base leading-5 font-medium rounded-md">
+                                            <!-- Heroicon name: outline/view-list -->
+                                            <svg class="text-gray-400 group-hover:text-gray-500 mr-3 flex-shrink-0 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 10h16M4 14h16M4 18h16" />
+                                            </svg>
+                                            <span class="w-64 truncate" title="{{ $sVideo->title }}">{{ $sVideo->title }}</span>
+                                        </a>
+                                @endif
+                            @endforeach
+                        </div>
+                    </nav>
+                </div>
             </div>
 
-        <div class="inline-block max-w-2xl p-3 bg-white rounded-lg shadow-lg mr-4 px-4 md:px-6 xl:px-1.5 xl:py-5
-        2xl:px-20 2xl:py-10 m-4 border-t-2 border-indigo-500 rounded-t-none">
+            <div class="flex-shrink-0 w-14" aria-hidden="true">
+                <!-- Dummy element to force sidebar to shrink to fit close icon -->
+            </div>
+        </div>
+        <!-- Static sidebar for desktop -->
+        <div class="hidden lg:flex lg:flex-col lg:w-96 lg:fixed lg:top-[64px] lg:bottom-0 lg:border-r lg:border-gray-200 lg:pt-5 lg:pb-4 lg:bg-gray-100">
+            <div class="flex items-center flex-shrink-0 px-6">
+                <img class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0 mr-2" src="/storage/{{ $video->serie?->image_url }}" alt="">
+                <span class="w-80 truncate" title="{{ $video->serie?->title }}">{{ $video->serie?->title }}</span>
+            </div>
+            <!-- Sidebar component, swap this element with another sidebar if you like -->
+            <div class="mt-6 h-0 flex-1 flex flex-col">
+                <!-- Serie Teacher info -->
+                <div class="px-3 relative inline-block text-left">
+                    <div>
+                        <button type="button" class="group w-full bg-gray-100 rounded-md px-3.5 py-2 text-sm text-left font-medium text-gray-700 hover:bg-gray-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-100 focus:ring-purple-500" id="options-menu-button" aria-expanded="false" aria-haspopup="true">
+                            <span class="flex w-full justify-between items-center">
+                              <span class="flex min-w-0 items-center justify-between space-x-3">
+                                <img class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0" src="{{ $video->serie?->teacher_photo_url}}" alt="{{ $video->serie?->teacher_name }}">
 
-        <h2 class="text-gray-900 uppercase font-bold text-2xl tracking-tight mr-4 px-4 md:px-6 xl:px-1.5 xl:py-5
-        2xl:px-20 2xl:py-10">
-            {{ $video->title }}
-        </h2>
-
-
-            <div class="p-4 bg-white shadow-lg rounded-2xl w-36 dark:bg-gray-800">
-                <div class="flex items-center">
-        <span class="relative w-4 h-4 p-2 bg-green-500 rounded-full">
-            <svg width="20" fill="currentColor" height="20" class="absolute h-2 text-white transform -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2" viewBox="0 0 1792 1792" xmlns="http://www.w3.org/2000/svg">
-                <path d="M1362 1185q0 153-99.5 263.5t-258.5 136.5v175q0 14-9 23t-23 9h-135q-13 0-22.5-9.5t-9.5-22.5v-175q-66-9-127.5-31t-101.5-44.5-74-48-46.5-37.5-17.5-18q-17-21-2-41l103-135q7-10 23-12 15-2 24 9l2 2q113 99 243 125 37 8 74 8 81 0 142.5-43t61.5-122q0-28-15-53t-33.5-42-58.5-37.5-66-32-80-32.5q-39-16-61.5-25t-61.5-26.5-62.5-31-56.5-35.5-53.5-42.5-43.5-49-35.5-58-21-66.5-8.5-78q0-138 98-242t255-134v-180q0-13 9.5-22.5t22.5-9.5h135q14 0 23 9t9 23v176q57 6 110.5 23t87 33.5 63.5 37.5 39 29 15 14q17 18 5 38l-81 146q-8 15-23 16-14 3-27-7-3-3-14.5-12t-39-26.5-58.5-32-74.5-26-85.5-11.5q-95 0-155 43t-60 111q0 26 8.5 48t29.5 41.5 39.5 33 56 31 60.5 27 70 27.5q53 20 81 31.5t76 35 75.5 42.5 62 50 53 63.5 31.5 76.5 13 94z">
-                </path>
-            </svg>
-        </span>
-                    <p class="ml-2 text-gray-700 text-md dark:text-gray-50">
-                        Data de creació
-                    </p>
+                                <span class="flex-1 flex flex-col min-w-0">
+                                  <span class="text-gray-900 text-sm font-medium truncate">{{ $video->serie?->teacher_name }}</span>
+                                  <span class="text-gray-500 text-sm truncate">@jessyschwarz</span>
+                                </span>
+                              </span>
+                            </span>
+                        </button>
+                    </div>
                 </div>
-                <div class="flex flex-col justify-start">
-                    <p class="my-4 text-4xl font-bold text-left text-gray-800 dark:text-white">
-                        {{ $video->formatted_published_at}}
-                    </p>
-                    <div class="relative h-2 bg-gray-200 rounded w-28">
-                        <div class="absolute top-0 left-0 w-2/3 h-2 bg-green-500 rounded">
+{{--                <!-- Sidebar Search -->--}}
+{{--                <div class="px-3 mt-5">--}}
+{{--                    <label for="search" class="sr-only">Search</label>--}}
+{{--                    <div class="mt-1 relative rounded-md shadow-sm">--}}
+{{--                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none" aria-hidden="true">--}}
+{{--                            <!-- Heroicon name: solid/search -->--}}
+{{--                            <svg class="mr-3 h-4 w-4 text-gray-400" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">--}}
+{{--                                <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />--}}
+{{--                            </svg>--}}
+{{--                        </div>--}}
+{{--                        <input type="text" name="search" id="search" class="focus:ring-indigo-500 focus:border-indigo-500 block w-full pl-9 sm:text-sm border-gray-300 rounded-md" placeholder="Search">--}}
+{{--                    </div>--}}
+{{--                </div>--}}
+                <!-- Navigation -->
+                <nav class="px-3 mt-6 overflow-y-auto">
+                    <div class="space-y-1">
+                        @foreach ($videos_series as $sVideo)
+                            @if ($sVideo->is($video))
+                                <!-- Current: "bg-gray-200 text-gray-900", Default: "text-gray-700 hover:text-gray-900 hover:bg-gray-50" -->
+                                <a href="#" class="w-80 bg-gray-200 text-gray-900 group flex items-center px-2 py-2 text-sm font-medium rounded-md" aria-current="page">
+                                    <!--
+                                      Heroicon name: outline/home
+
+                                      Current: "text-gray-500", Default: "text-gray-400 group-hover:text-gray-500"
+                                    -->
+                                    <svg class="text-gray-500 mr-3 flex-shrink-0 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                    </svg>
+                                    <span class="w-80 truncate" title="{{ $sVideo->title }}">{{ $sVideo->title }}</span>
+                                </a>
+                            @else
+                                    <a href="/videos/{{ $sVideo->id }}" class="w-80 text-gray-700 hover:text-gray-900 hover:bg-gray-50 group flex items-center px-2 py-2 text-sm font-medium rounded-md">
+                                        <svg class="text-gray-500 mr-3 flex-shrink-0 h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" />
+                                        </svg>
+                                        <span class="w-80 truncate" title="{{ $sVideo->title }}">{{ $sVideo->title }}</span>
+                                    </a>
+                            @endif
+                        @endforeach
+                    </div>
+                </nav>
+            </div>
+        </div>
+        <!-- Main column -->
+        <div class="lg:pl-96 flex flex-col overflow-y-auto" style="height: calc(100vh - 65px);">
+                <!-- Search header -->
+                <div class="sticky top-0 z-10 flex-shrink-0 flex h-16 bg-white border-b border-gray-200 lg:hidden">
+                    <!-- Sidebar toggle, controls the 'sidebarOpen' sidebar state. -->
+                    <button type="button"
+                            class="px-4 border-r border-gray-200 text-gray-500 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-purple-500 lg:hidden"
+                            x-on:click="open = true;">
+                        <span class="sr-only">Open sidebar</span>
+                        <!-- Heroicon name: outline/menu-alt-1 -->
+                        <svg class="h-6 w-6" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" aria-hidden="true">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h8m-8 6h16" />
+                        </svg>
+                    </button>
+                    <div class="flex-1 flex justify-between px-4 sm:px-6 lg:px-8">
+                        <div class="flex-1 flex">
+                            <div class="w-full flex md:ml-0">
+                                <label for="search-field" class="sr-only">Search</label>
+                                <div class="relative w-full text-gray-400 focus-within:text-gray-600">
+                                    <div class="absolute inset-y-0 left-0 flex items-center pointer-events-none">
+                                      <span class="hidden md:inline md:mr-2"><--</span> <img class="w-10 h-10 bg-gray-300 rounded-full flex-shrink-0 mr-2" src="/storage/{{ $video->serie?->image_url }}" alt="">
+                                      <span class="w-48 truncate" title="{{ $video->serie?->title }}">{{ $video->serie?->title }}</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="flex items-center">
+                            <!-- Profile dropdown -->
+                            <div class="ml-3 relative">
+                                <div>
+                                    <button type="button" class="max-w-xs bg-white flex items-center text-sm rounded-full focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-purple-500" id="user-menu-button" aria-expanded="false" aria-haspopup="true">
+                                        <span class="mr-3 hidden md:inline">{{ $video->serie?->teacher_name }}</span>
+                                        <img class="h-8 w-8 rounded-full" src="{{ $video->serie?->teacher_photo_url }}" alt="">
+                                    </button>
+                                </div>
+
+                                <!--
+                                  Dropdown menu, show/hide based on menu state.
+
+                                  Entering: "transition ease-out duration-100"
+                                    From: "transform opacity-0 scale-95"
+                                    To: "transform opacity-100 scale-100"
+                                  Leaving: "transition ease-in duration-75"
+                                    From: "transform opacity-100 scale-100"
+                                    To: "transform opacity-0 scale-95"
+                                -->
+                            </div>
                         </div>
                     </div>
                 </div>
+                <div class="flex-1">
+                    @if($video->canBeDisplayed())
+                        @include('videos.show_main')
+                    @else
+                        @include('videos.show_main_needs_subscription')
+                    @endif
+                </div>
             </div>
-
-        </div>
-
-        <div class="prose-sm md:prose lg:prose-xl 2xl:prose-2xl my-auto">
-            {!! Str::markdown  ($video->description) !!}
-        </div>
     </div>
+
 </x-casteaching-layout>
+

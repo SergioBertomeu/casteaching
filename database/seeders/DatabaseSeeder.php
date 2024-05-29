@@ -2,20 +2,21 @@
 
 namespace Database\Seeders;
 
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
-use App\Models\Team;
+use App\Models\User;
 use App\Models\Video;
 use Carbon\Carbon;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Hash;
 
 class DatabaseSeeder extends Seeder
 {
     /**
      * Seed the application's database.
+     *
+     * @return void
      */
-    public function run(): void
+    public function run()
     {
-
         create_default_user();
 
         create_superadmin_user();
@@ -28,9 +29,12 @@ class DatabaseSeeder extends Seeder
 
         create_default_videos();
 
-        create_permission();
-
         create_sample_videos();
 
+        create_permissions();
+
+        create_sample_series();
+
+        create_placeholder_series_image();
     }
 }

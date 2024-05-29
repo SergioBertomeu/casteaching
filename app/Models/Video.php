@@ -3,18 +3,17 @@
 namespace App\Models;
 
 use Carbon\Carbon;
+use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Auth;
 use Tests\Unit\VideoTest;
-use Illuminate\Foundation\Auth\User as Authenticatable;
-use Spatie\Permission\Traits\HasRoles;
 
 class Video extends Model
 {
     use HasFactory;
-    use HasRoles;
 
-    public static function testesBy()
+    public static function testedBy()
     {
         return VideoTest::class;
     }
@@ -23,28 +22,68 @@ class Video extends Model
 
     protected $dates = ['published_at'];
 
-    public function getFormattedForHumansPublishedAtAttribute()
+    protected function onlyForSubscribers(): Attribute
     {
-        //Carbon::setLocale('ca');
-        //dd($this->published_at->format('j \d\e F \d\e Y'));
-        //dd($this->published_at->locale(config('app.locale')));
-        dd(optional($this->published_at)->timestamp);
-        if (!$this->published_at) return '';
-        $locale_date = optional($this->published_at)->locale(config('app.locale'));
-        return $locale_date->day . ' de ' . $locale_date->monthName . ' de ' . $locale_date->year;
-
-
+        return new Attribute(
+            get: fn ($value) => (boolean) !is_null($this->needs_subscription)
+        );
     }
 
+    public function canBeDisplayed()
+    {
+        if ($this->only_for_subscribers) {
+            if(!Auth::check()) return false;
+        }
+        return true;
+    }
+
+    public function markAsOnlyForSubscribers()
+    {
+        $this->needs_subscription = Carbon::now();
+        $this->save();
+        return $this;
+    }
+
+    // formatted_published_at accessor
     public function getFormattedPublishedAtAttribute()
     {
-        return optional($this->published_at)->diffForHumans(Carbon::now());
-
+        if(!$this->published_at) return '';
+        $locale_date = $this->published_at->locale(config('app.locale'));
+        return $locale_date->day . ' de ' . $locale_date->monthName . ' de ' . $locale_date->year;
     }
 
-    public function getPublishedTimesTampAtAttribute()
+    public function getFormattedForHumansPublishedAtAttribute()
+    {
+        return optional($this->published_at)->diffForHumans(Carbon::now());
+    }
+
+    public function getPublishedAtTimestampAttribute()
     {
         return optional($this->published_at)->timestamp;
+    }
 
+    public function serie()
+    {
+        return $this->belongsTo(Serie::class);
+    }
+
+    public function setSerie(Serie $serie)
+    {
+        $this->serie_id = $serie->id;
+        $this->save();
+        return $this;
+    }
+
+    public function setOwner(User $user)
+    {
+        $this->user_id = $user->id;
+        $this->save();
+        return $this;
+    }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
     }
 }
+
